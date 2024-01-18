@@ -15,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    Artisan::call('view:clear');
     return view('home', ['name' => 'Finn']);
+});
+
+Route::get('/catalog', function () {
+    return view('catalog', ['name' => 'Finn']);
 });

@@ -3,7 +3,7 @@
 @section('content')
 
     <section>
-        <img src="{{ asset('img/content/company-photo.jpg') }}" alt="company">
+        <h1>Каталог</h1>
     </section>
 
 @stop
