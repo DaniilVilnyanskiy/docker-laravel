@@ -1,17 +1,4 @@
 @import "./components/Button";
 @import "./components/Headings";
 
-.header {
-    &__container {
-        display: flex;
-        justify-content: space-between;
-        gap: 32px;
-    }
-    &__logo {
-        width: 180px;
-    }
-    &__nav {
-        display: flex;
-        gap: 12px;
-    }
-}
+
