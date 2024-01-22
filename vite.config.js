@@ -5,7 +5,15 @@ import path from 'path';
 
 export default defineConfig({
     plugins: [
-        vue(),
+        vue({
+            template: {
+                compilerOptions: {
+                    compatConfig: {
+                        MODE: 2
+                    }
+                }
+            }
+        }),
         laravel({
             input: [
                 'resources/css/app.scss',
@@ -17,7 +25,8 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, 'resources/js/src')
+            '@': path.resolve(__dirname, 'resources/js/src'),
+            vue: '@vue/compat'
         }
     }
 });
