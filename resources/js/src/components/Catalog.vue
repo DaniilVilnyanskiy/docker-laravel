@@ -1,6 +1,7 @@
 <template>
     <Filter/>
-    <CatalogList :products="this.allProducts"/>
+    <Loader v-if="this.getStateLoading" />
+    <CatalogList v-else :products="this.allProducts"/>
 </template>
 
 <script>
@@ -8,15 +9,17 @@ import {defineComponent} from 'vue';
 import Filter from "@/components/Filter/Filter.vue";
 import CatalogList from "@/components/CatalogList.vue";
 import {mapActions, mapGetters} from "vuex";
+import Loader from "@/components/Loader.vue";
 
 export default defineComponent({
     name: "Catalog",
-    components: {CatalogList, Filter},
+    components: {Loader, CatalogList, Filter},
     setup() {
         return {};
     },
     computed: {
-        ...mapGetters(['allProducts'])
+        ...mapGetters(['allProducts']),
+        ...mapGetters(['getStateLoading']),
     },
     methods: {
         ...mapActions(['fetchProducts'])

@@ -1,20 +1,24 @@
 <template>
-    <div class="catalog__list" v-for="product in this.products" :key="product.id">
+    <div class="catalog__list">
         <b-card
-            :title="product.title"
+            v-for="product in this.products" :key="product.id"
             img-src="https://picsum.photos/600/300/?image=25"
             img-alt="Image"
             img-top
-            tag="article"
-            style="max-width: 20rem;"
-            class="mb-2"
+            no-body
+            class="card"
         >
-            <b-card-text v-if="product.description">
-                {{ product.description }}
-            </b-card-text>
-
-            <b-button href="#" class="mr-1" variant="primary">Добавить в корзину</b-button>
-            <b-button href="#" variant="">Подробнее</b-button>
+            <b-card-body>
+                <b-card-title>{{ product.title }}</b-card-title>
+                <b-card-sub-title class="mb-2">Card Sub Title</b-card-sub-title>
+                <b-card-text v-if="product.description">
+                    {{ product.description }}
+                </b-card-text>
+            </b-card-body>
+            <b-card-footer class="card__footer">
+                <b-button href="#" class="card__btn" variant="primary">Добавить в корзину</b-button>
+                <b-button href="#" class="card__btn" variant="">Подробнее</b-button>
+            </b-card-footer>
         </b-card>
     </div>
 </template>
@@ -34,4 +38,23 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 
+.catalog {
+    &__list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+}
+.card {
+    width: calc(33.33% - 8px);
+    &__footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    &__btn {
+        flex: 1 1 auto;
+        margin: 0;
+    }
+}
 </style>

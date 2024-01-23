@@ -5,31 +5,34 @@
         class="filter__btn"
         variant="outline-secondary"
     >
-        {{ btn.name }}
+        {{ btn.title }}
     </b-button>
     <b-collapse :id="`collapse-${btn.id}`" @show="onShow" @hide="onHide">
-        <b-form-checkbox
-            v-for="item in items"
-            id="checkbox-1"
-            v-model="status"
-            name="sort"
-            value="accepted"
-            unchecked-value="not_accepted"
-        >
-            {{ item.title }}
-        </b-form-checkbox>
+
+        <CustomCheckbox
+            v-for="(item, id) in items"
+            :params="item"
+            :id="id"
+            :selectId="btn.id"
+            @changeCheckbox="this.changeCheckbox(btn.id, id)"
+            :showApplyModalForEl="showApplyModalForEl"
+        />
+
     </b-collapse>
 </template>
 
 <script>
 import {defineComponent} from 'vue';
+import CustomCheckbox from "@/components/CustomCheckbox.vue";
 
 export default defineComponent({
     name: "FilterSelect",
-    props: ["btn", "items"],
-    components: {},
+    props: ['btn', 'items', 'showApplyModalForEl'],
+    components: {CustomCheckbox},
     setup() {
-        return {};
+        return {
+
+        };
     },
     methods: {
         onShow() {
@@ -37,6 +40,13 @@ export default defineComponent({
         },
         onHide() {
             this.$refs.button.classList.remove('active');
+        },
+        changeCheckbox(selectId, checkboxId) {
+            // console.log(selectId)
+            // console.log(checkboxId)
+            // console.log(this.showApplyModalForEl);
+            this.showApplyModalForEl.selectId = selectId;
+            this.showApplyModalForEl.checkboxId = checkboxId;
         }
     }
 })

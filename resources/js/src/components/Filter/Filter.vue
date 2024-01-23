@@ -1,20 +1,12 @@
 <template>
     <div class="d-flex flex-column filter">
-        <FilterSelect
-            :btn="{name: 'Сорт', id: 0}"
-            :items="[{title: 'Сосна'},{title: 'Береза'}]"
-
+        <FilterSelect v-for="accordion in filterSelect"
+            :btn="accordion.btn"
+            :items="accordion.items"
+            :showApplyModalForEl="showApplyModalForEl"
         />
-        <FilterSelect
-            :btn="{name: 'Размеры', id: 1}"
-            :items="[{title: '20*20'},{title: '30*30'}]"
-
-        />
-        <FilterSelect
-            :btn="{name: 'Вид', id: 2}"
-            :items="[{title: 'Вагонка'},{title: 'Доска'}]"
-
-        />
+<!--        <div>{{showApplyModalForEl}}</div>-->
+<!--        <div>{{ filterSelect }}</div>-->
     </div>
 </template>
 
@@ -24,9 +16,52 @@ import FilterSelect from "@/components/Filter/FilterSelect.vue";
 
 export default defineComponent({
     name: "Filter",
+    props: {
+        modelValue: {
+            default: false,
+            required: true,
+            type: Boolean,
+        },
+    },
     components: {FilterSelect},
+    data() {
+      return {
+          showApplyModalForEl: {
+              "selectId": -1,
+              "checkboxId": -1
+          },
+          filterSelect: [
+              {
+                  btn: {title: 'Сорт', name: 'sort', id: 0},
+                  items: [
+                      {title: 'Сосна', value: 'pine', model: false},
+                      {title: 'Дуб', value: 'oak', model: false},
+                  ]
+              },
+              {
+                  btn: {title: 'Размеры', name: 'size', id: 1},
+                  items: [
+                      {title: '20*20*1000', value: '20*20*1000', model: false},
+                      {title: '20*30*1000', value: '20*30*1000', model: false},
+                  ]
+              },
+              {
+                  btn: {title: 'Категория', name: 'category', id: 2},
+                  items: [
+                      {title: 'Вагонка', value: 'clapboard', model: false},
+                      {title: 'Доска', value: 'board', model: false},
+                  ]
+              }
+          ]
+      }
+    },
     setup() {
-        return {};
+        return {
+
+        };
+    },
+    methods: {
+
     }
 })
 </script>
