@@ -10,3 +10,6 @@ make stop:
 make bash:
     docker-compose exec licenzion-app /bin/bash
     docker exec -it licenzion-app /bin/bash
+
+
+php artisan make:model --migration
