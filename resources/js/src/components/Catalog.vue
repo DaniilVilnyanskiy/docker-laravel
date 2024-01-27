@@ -1,7 +1,8 @@
 <template>
-    <Filter/>
-    <Loader v-if="this.getStateLoading" />
+    <Filter :allFilters="this.allFilters"/>
+    <Loader v-if="this.productsLoading" />
     <CatalogList v-else :products="this.allProducts"/>
+    <pre style="width: 774px;">{{ this.allFilters }}</pre>
 </template>
 
 <script>
@@ -19,13 +20,16 @@ export default defineComponent({
     },
     computed: {
         ...mapGetters(['allProducts']),
-        ...mapGetters(['getStateLoading']),
+        ...mapGetters(['allFilters']),
+        ...mapGetters(['productsLoading']),
     },
     methods: {
-        ...mapActions(['fetchProducts'])
+        ...mapActions(['fetchProducts']),
+        ...mapActions(['fetchFilters']),
     },
     async mounted() {
-        await this.fetchProducts();
+        await this.fetchFilters();
+        // await this.fetchProducts();
     }
 })
 </script>

@@ -4,25 +4,32 @@
             :checked="status"
             @click="this.changeCheckbox"
             class="custom-control-input"
-            id="my-id"
+            :id="id"
             type="checkbox"
         />
-        <label class="custom-control-label" for="my-id"
-        >{{ params.title }}</label>
+        <label class="checkbox__label" for="my-id"
+        >{{ params.value }}</label>
         <div
             class="checkbox__apply"
-            v-if="showApplyModalForEl.checkboxId === id && showApplyModalForEl.selectId === selectId"
+            @click="this.sendFilters"
+            v-if="showApplyModalForEl.checkboxId === id
+            && showApplyModalForEl.filterId === filterId"
         >Применить <span @click="this.closeApply">x</span></div>
     </div>
 </template>
 
 <script>
 import {defineComponent} from 'vue';
+import {mapActions, mapGetters} from "vuex";
+import {convertProxyToObject, createUrlFormObj} from "@/components/lib/lib.js";
 
 export default defineComponent({
     name: "CustomCheckbox",
-    props: ['params', 'showApplyModalForEl', 'id', 'selectId'],
+    props: ['params', 'showApplyModalForEl', 'id', 'filterId'],
     components: {},
+    computed: {
+        ...mapGetters(['allActiveFilters'])
+    },
     data() {
         return {
             status: this.params.model,
@@ -32,21 +39,20 @@ export default defineComponent({
         return {};
     },
     methods: {
+        ...mapActions(['fetchActiveFilters']),
         changeCheckbox() {
             this.status = !this.status;
             this.params.model = this.status;
             this.$emit('changeCheckbox');
-            // if (this.status) {
-            //     this.$emit('changeCheckbox');
-            // } else {
-            //     console.log(this.status);
-            //     this.showApplyModalForEl.selectId = -1;
-            //     this.showApplyModalForEl.checkboxId = -1;
-            // }
         },
         closeApply() {
-            this.showApplyModalForEl.selectId = -1;
+            this.showApplyModalForEl.filterId = -1;
             this.showApplyModalForEl.checkboxId = -1;
+        },
+        sendFilters() {
+            const resultObject = convertProxyToObject(this.allActiveFilters);
+            console.log(createUrlFormObj(resultObject));
+            this.fetchActiveFilters(createUrlFormObj(resultObject))
         }
     }
 })
@@ -55,6 +61,14 @@ export default defineComponent({
 <style lang="scss" scoped>
 .checkbox {
     position: relative;
+    display: flex;
+    align-items: end;
+    gap: 8px;
+
+    &__label {
+        line-height: 16px;
+    }
+
     &__apply {
         background: #9ca3af;
         position: absolute;

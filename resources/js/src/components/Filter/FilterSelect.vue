@@ -1,20 +1,20 @@
 <template>
     <b-button
-        v-b-toggle="`collapse-${btn.id}`"
+        v-b-toggle="`collapse-${filterId}`"
         ref="button"
         class="filter__btn"
         variant="outline-secondary"
     >
-        {{ btn.title }}
+        {{ filter.title }}
     </b-button>
-    <b-collapse :id="`collapse-${btn.id}`" @show="onShow" @hide="onHide">
+    <b-collapse visible :id="`collapse-${filterId}`" @show="onShow" @hide="onHide">
 
         <CustomCheckbox
-            v-for="(item, id) in items"
+            v-for="(item, checkboxId) in filter.items"
             :params="item"
-            :id="id"
-            :selectId="btn.id"
-            @changeCheckbox="this.changeCheckbox(btn.id, id)"
+            :id="checkboxId"
+            :filterId="filterId"
+            @changeCheckbox="this.changeCheckbox(filterId, checkboxId, item)"
             :showApplyModalForEl="showApplyModalForEl"
         />
 
@@ -24,10 +24,11 @@
 <script>
 import {defineComponent} from 'vue';
 import CustomCheckbox from "@/components/CustomCheckbox.vue";
+import {mapMutations} from "vuex";
 
 export default defineComponent({
     name: "FilterSelect",
-    props: ['btn', 'items', 'showApplyModalForEl'],
+    props: ['filter', 'showApplyModalForEl', 'keyName', 'filterId'],
     components: {CustomCheckbox},
     setup() {
         return {
@@ -35,17 +36,23 @@ export default defineComponent({
         };
     },
     methods: {
+        ...mapMutations(['addActiveFilter']),
+        ...mapMutations(['addFilterRow']),
         onShow() {
             this.$refs.button.classList.add('active');
         },
         onHide() {
             this.$refs.button.classList.remove('active');
         },
-        changeCheckbox(selectId, checkboxId) {
+        changeCheckbox(selectId, checkboxId, item) {
             // console.log(selectId)
             // console.log(checkboxId)
             // console.log(this.showApplyModalForEl);
-            this.showApplyModalForEl.selectId = selectId;
+            // this.addActiveFilter()
+            // this.addFilterRow(`${this.keyName}=`)
+            this.addActiveFilter({name:this.keyName, filter: item})
+
+            this.showApplyModalForEl.filterId = selectId;
             this.showApplyModalForEl.checkboxId = checkboxId;
         }
     }

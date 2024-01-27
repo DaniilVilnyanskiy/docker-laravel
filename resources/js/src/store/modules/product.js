@@ -32,7 +32,7 @@ export default {
         allProducts(state) {
             return state.products
         },
-        getStateLoading(state) {
+        productsLoading(state) {
             return state.productsLoading
         }
     },
