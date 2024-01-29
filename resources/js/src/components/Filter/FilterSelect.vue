@@ -14,6 +14,8 @@
             :params="item"
             :id="checkboxId"
             :filterId="filterId"
+            :filterKeyName="keyName"
+            :showApply="allActiveFilters[keyName]&& allActiveFilters[keyName][checkboxId]"
             @changeCheckbox="this.changeCheckbox(filterId, checkboxId, item)"
             :showApplyModalForEl="showApplyModalForEl"
         />
@@ -48,13 +50,6 @@ export default defineComponent({
             this.$refs.button.classList.remove('active');
         },
         changeCheckbox(selectId, checkboxId, item) {
-            // console.log(selectId)
-            // console.log(checkboxId)
-            // console.log(this.showApplyModalForEl);
-            // this.addActiveFilter()
-            // this.addFilterRow(`${this.keyName}=`)
-            // console.log(this.keyName);
-            // console.log(item);
             this.addActiveFilter({name:this.keyName, filter: item});
 
             this.showApplyModalForEl.filterId = selectId;

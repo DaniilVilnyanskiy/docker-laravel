@@ -95,7 +95,7 @@ class ProductController extends Controller
 
             return $filteredProducts;
         } else {
-            $this->getAllProducts();
+            return $this->getAllProducts();
         }
     }
 }

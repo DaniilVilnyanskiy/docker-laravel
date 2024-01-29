@@ -3,6 +3,7 @@
     <Loader v-if="this.productsLoading" />
     <CatalogList v-else :products="this.allProducts"/>
 <!--    <pre style="width: 774px;">{{ this.allFilters }}</pre>-->
+<!--    <pre style="width: 774px;" v-for="item in Object.entries(this.allActiveFilters)">{{ item }}</pre>-->
 <!--    <pre style="width: 774px;">{{ this.allActiveFilters["category"][0] && JSON.parse(this.allActiveFilters["category"][0]) }}</pre>-->
 </template>
 
@@ -30,8 +31,8 @@ export default defineComponent({
         ...mapActions(['fetchFilters']),
     },
     async mounted() {
-        await this.fetchFilters();
-        // await this.fetchProducts();
+        this.fetchFilters();
+        this.fetchProducts();
     }
 })
 </script>

@@ -1,19 +1,21 @@
 <template>
     <div class="checkbox">
         <input
-            :checked="status"
+            :checked="isFilterActive"
             @click="this.changeCheckbox"
             class="custom-control-input"
             :id="id"
             type="checkbox"
         />
         <label class="checkbox__label" :for="id"
-        >{{ params.value }}</label>
+        >
+            {{ params.value }}
+<!--            {{ showApply }}-->
+        </label>
         <div
             class="checkbox__apply"
             @click="this.sendFilters"
-            v-if="showApplyModalForEl.checkboxId === id
-            && showApplyModalForEl.filterId === filterId"
+            v-if="isApplyActive"
         >Применить <span @click.prevent.stop="this.closeApply">x</span></div>
     </div>
 </template>
@@ -25,10 +27,21 @@ import {convertProxyToObject, createUrlFormObj} from "@/components/lib/lib.js";
 
 export default defineComponent({
     name: "CustomCheckbox",
-    props: ['params', 'showApplyModalForEl', 'id', 'filterId'],
+    props: ['params', 'showApplyModalForEl', 'id', 'filterId', 'filterKeyName', 'showApply'],
     components: {},
     computed: {
-        ...mapGetters(['allActiveFilters'])
+        ...mapGetters(['allActiveFilters']),
+        isApplyActive() {
+            return (
+                this.showApplyModalForEl.checkboxId === this.id
+                && this.showApplyModalForEl.filterId === this.filterId
+            )
+        },
+        isFilterActive() {
+            return (
+                this.showApply && (JSON.parse(this.showApply).id - 1) === this.id
+            )
+        }
     },
     data() {
         return {
