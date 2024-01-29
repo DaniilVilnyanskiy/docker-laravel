@@ -2,7 +2,8 @@
     <Filter :allFilters="this.allFilters"/>
     <Loader v-if="this.productsLoading" />
     <CatalogList v-else :products="this.allProducts"/>
-    <pre style="width: 774px;">{{ this.allFilters }}</pre>
+<!--    <pre style="width: 774px;">{{ this.allFilters }}</pre>-->
+<!--    <pre style="width: 774px;">{{ this.allActiveFilters["category"][0] && JSON.parse(this.allActiveFilters["category"][0]) }}</pre>-->
 </template>
 
 <script>
@@ -22,6 +23,7 @@ export default defineComponent({
         ...mapGetters(['allProducts']),
         ...mapGetters(['allFilters']),
         ...mapGetters(['productsLoading']),
+        ...mapGetters(['allActiveFilters'])
     },
     methods: {
         ...mapActions(['fetchProducts']),

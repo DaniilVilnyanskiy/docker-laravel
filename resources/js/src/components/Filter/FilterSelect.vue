@@ -24,12 +24,15 @@
 <script>
 import {defineComponent} from 'vue';
 import CustomCheckbox from "@/components/CustomCheckbox.vue";
-import {mapMutations} from "vuex";
+import {mapGetters, mapMutations} from "vuex";
 
 export default defineComponent({
     name: "FilterSelect",
     props: ['filter', 'showApplyModalForEl', 'keyName', 'filterId'],
     components: {CustomCheckbox},
+    computed: {
+        ...mapGetters(['allActiveFilters'])
+    },
     setup() {
         return {
 
@@ -50,7 +53,9 @@ export default defineComponent({
             // console.log(this.showApplyModalForEl);
             // this.addActiveFilter()
             // this.addFilterRow(`${this.keyName}=`)
-            this.addActiveFilter({name:this.keyName, filter: item})
+            // console.log(this.keyName);
+            // console.log(item);
+            this.addActiveFilter({name:this.keyName, filter: item});
 
             this.showApplyModalForEl.filterId = selectId;
             this.showApplyModalForEl.checkboxId = checkboxId;

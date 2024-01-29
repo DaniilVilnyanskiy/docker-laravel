@@ -7,14 +7,14 @@
             :id="id"
             type="checkbox"
         />
-        <label class="checkbox__label" for="my-id"
+        <label class="checkbox__label" :for="id"
         >{{ params.value }}</label>
         <div
             class="checkbox__apply"
             @click="this.sendFilters"
             v-if="showApplyModalForEl.checkboxId === id
             && showApplyModalForEl.filterId === filterId"
-        >Применить <span @click="this.closeApply">x</span></div>
+        >Применить <span @click.prevent.stop="this.closeApply">x</span></div>
     </div>
 </template>
 
@@ -51,7 +51,6 @@ export default defineComponent({
         },
         sendFilters() {
             const resultObject = convertProxyToObject(this.allActiveFilters);
-            console.log(createUrlFormObj(resultObject));
             this.fetchActiveFilters(createUrlFormObj(resultObject))
         }
     }
