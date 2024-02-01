@@ -1,24 +1,27 @@
 export function convertProxyToObject(proxyObject, twoStep = false) {
-    let entries = Object.entries(proxyObject);
-    if (twoStep) {
-        let arr = [];
-        entries.forEach((e) => {
-            if (e[1]) arr.push(JSON.parse(e[1]));
-        })
-        return arr;
-    }
-    return Object.fromEntries(entries.map(([key, value]) => {
-        if (typeof value === 'object') {
-            return [key, convertProxyToObject(value, true)];
-        } else if (typeof value === 'string') {
-            return [key, JSON.parse(value)];
-        } else {
-            return [key, value];
+    const filters = JSON.parse(JSON.stringify(proxyObject));
+    const searchObject = {};
+
+    for (const filterKindKey in filters) {
+        if (filters[filterKindKey].items) {
+
+            for (const item in filters[filterKindKey].items) {
+                const filter = filters[filterKindKey].items[item];
+
+                if (filter.model) {
+                    if (!searchObject[filterKindKey]) {
+                        searchObject[filterKindKey] = [];
+                    }
+                    searchObject[filterKindKey].push(filter.value)
+                }
+            }
         }
-    }));
+    }
+
+    return searchObject;
 }
 export function createUrlFormObj(obj) {
     return Object.entries(obj)
-        .map(([key, values]) => `${key}=${values.map(v => v.value.replace(/\*/g, '%2A')).join('-')}`)
+        .map(([key, values]) => `${key}=${values.map(v => v.replace(/\*/g, '%2A')).join('-')}`)
         .join('&');
 }

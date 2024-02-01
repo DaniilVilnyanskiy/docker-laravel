@@ -1,0 +1,30 @@
+.loading {
+    position: relative;
+}
+.loading::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    right: -2px;
+    bottom: -3px;
+    left: -2px;
+    animation-duration: 7s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background-color: #f6f7f8;
+    background: linear-gradient(to right, #eeeeee 20%, #dddddd 50%, #eeeeee 80%);
+    border-radius: var(--bs-border-radius);
+}
+.btn.loading::after {
+    border-radius: var(--bs-border-radius);
+}
+@keyframes placeHolderShimmer {
+    0% {
+        background-position: -800px 0
+    }
+    100% {
+        background-position: 800px 0
+    }
+}

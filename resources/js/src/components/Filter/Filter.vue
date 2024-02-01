@@ -1,29 +1,25 @@
 <template>
     <div class="d-flex flex-column filter">
-        {{showApplyModalForEl}}
-        <FilterSelect v-for="(value, id) in Object.entries(allFilters)"
+        <FilterSelect v-for="(value, id) in Object.entries(this.allFilters)"
             :keyName="value[0]"
             :filterId="id"
             :filter="value[1]"
-            :showApplyModalForEl="showApplyModalForEl"
+            :filtersLoading="this.filtersLoading"
         />
     </div>
 </template>
 
 <script>
-import {defineComponent} from 'vue';
+import {mapActions, mapGetters} from "vuex";
 import FilterSelect from "@/components/Filter/FilterSelect.vue";
 
-export default defineComponent({
+export default {
     name: "Filter",
-    props: ['allFilters'],
+    props: [],
     components: {FilterSelect},
     data() {
       return {
-          showApplyModalForEl: {
-              "filterId": -1,
-              "checkboxId": -1
-          }
+
       }
     },
     setup() {
@@ -31,10 +27,17 @@ export default defineComponent({
 
         };
     },
+    computed: {
+        ...mapGetters(['allFilters']),
+        ...mapGetters(['filtersLoading']),
+    },
     methods: {
-
+        ...mapActions(['fetchFilters']),
+    },
+    async mounted() {
+        this.fetchFilters();
     }
-})
+}
 </script>
 
 <style lang="scss" scoped>

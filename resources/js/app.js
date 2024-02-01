@@ -5,12 +5,12 @@ import App from "@/App.vue";
 
 import router from "@/router/router";
 import store from "@/store/store";
-import BootstrapVue from 'bootstrap-vue'
+// import BootstrapVue from 'bootstrap-vue'
 
 import '../css/style.scss';
 
 createApp(App)
-    .use(BootstrapVue)
+    // .use(BootstrapVue)
     .use(store)
     .use(router)
     .mount("#app")

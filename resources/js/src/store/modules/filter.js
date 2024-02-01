@@ -1,8 +1,9 @@
+import filterInitial from "@/store/modules/filterInitial.js";
 export default {
     // initial value
     state: {
         filtersLoading: false,
-        filters: [],
+        filters: filterInitial,
         activeFilters: [],
         filtersRow: ''
     },
@@ -20,6 +21,7 @@ export default {
         },
         async fetchActiveFilters(context, searchParams) {
             context.commit('setLoadingFilters');
+            context.commit('setLoadingProducts');
 
             const responseData = await fetch('/api/products?' + searchParams)
                 .then((res) => res.json())
@@ -27,6 +29,7 @@ export default {
             if (!responseData) return;
 
             context.commit('removeLoadingFilters');
+            context.commit('removeLoadingProducts');
             context.commit('updateProducts', responseData);
         }
     },
@@ -41,21 +44,17 @@ export default {
             state.filtersLoading = false;
         },
         addActiveFilter(state, data) {
-            if (!state.activeFilters[data.name]) {
-                state.activeFilters[data.name] = [];
-            }
-            let index = -1;
-            const isDuplicate = state.activeFilters[data.name]
-                .some((item, ind) => {
-                    if (JSON.parse(item).id === data.filter.id) index = ind
-                    return JSON.parse(item).id === data.filter.id
-                });
-
-            if (!isDuplicate) {
-                state.activeFilters[data.name]?.push(JSON.stringify(data.filter));
-            } else if (index !== -1) {
-                state.activeFilters[data.name].splice(index, 1)
-            }
+            const { name, filter } = data;
+            state.activeFilters.push({name, value: filter.value})
+        },
+        clearActiveFilter(state, data) {
+            const activeFilters = JSON.parse(JSON.stringify(state.activeFilters));
+            const dataParse = JSON.parse(JSON.stringify(data));
+            activeFilters.forEach((filter, index) => {
+                if (filter.name === dataParse.name && filter.value === dataParse.filter?.value) {
+                    state.activeFilters.splice(index, 1)
+                }
+            })
         },
         addFilterRow(state, data) {
             state.filtersRow = data
@@ -67,6 +66,9 @@ export default {
         },
         allActiveFilters(state) {
             return state.activeFilters;
+        },
+        filtersLoading(state) {
+            return state.filtersLoading
         }
     },
 }

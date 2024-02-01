@@ -32,28 +32,31 @@ class ProductController extends Controller
         $sorts = Sort::all(['id', 'value']);
         $categories = Category::all(['id', 'value']);
 
-//        foreach ($categories as $category) {
-//            $category['model'] = true;
-//        }
-//        foreach ($sizes as $size) {
-//            $size['model'] = true;
-//        }
+        foreach ($categories as $category) {
+            $category['model'] = false;
+        }
+        foreach ($sizes as $size) {
+            $size['model'] = false;
+        }
+        foreach ($sorts as $sort) {
+            $sort['model'] = false;
+        }
 
         $filterObject = array (
             'category' =>
                 array (
                     'title' => 'Тип',
-                    'items' => $categories
+                    'items' => $categories,
                 ),
             'size' =>
                 array (
                     'title' => 'Размер',
-                    'items' => $sizes
+                    'items' => $sizes,
                 ),
             'kind' =>
                 array (
                     'title' => 'Сорт',
-                    'items' => $sorts
+                    'items' => $sorts,
                 ),
         );
 

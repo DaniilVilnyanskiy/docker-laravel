@@ -1,17 +1,16 @@
 <template>
     <PrimaryHeader/>
     <router-view></router-view>
-    <div class="container d-flex justify-content-between gap-2">
+    <div class="container d-flex justify-content-between gap-4">
         <Catalog/>
     </div>
 </template>
 
 <script>
-import {defineComponent} from 'vue';
 import PrimaryHeader from "@/components/PrimaryHeader.vue";
 import Catalog from "@/components/Catalog.vue";
 
-export default defineComponent({
+export default {
     components: {
         Catalog,
         PrimaryHeader
@@ -25,5 +24,9 @@ export default defineComponent({
     async mounted() {
 
     }
-})
+}
 </script>
+
+<style>
+@import '../../css/app.css';
+</style>

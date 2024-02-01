@@ -1,14 +1,13 @@
 <template>
-    <div class="container">
-        <h1>Home</h1>
-    </div>
+    <button :class="['btn', classes]">
+        {{ title }}
+    </button>
 </template>
 
 <script>
-import {defineComponent} from 'vue';
-
 export default {
-    name: "Home",
+    name: "Button",
+    props: ["classes", "title"],
     components: {},
     setup() {
         return {};

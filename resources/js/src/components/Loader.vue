@@ -7,13 +7,13 @@
 <script>
 import {defineComponent} from 'vue';
 
-export default defineComponent({
+export default {
     name: "Loader",
     components: {},
     setup() {
         return {};
     }
-})
+}
 </script>
 
 <style lang="scss" scoped>

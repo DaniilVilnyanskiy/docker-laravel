@@ -6,14 +6,14 @@ export default {
     },
     actions: {
         async fetchProducts(context) {
-            context.commit('setLoading');
+            context.commit('setLoadingProducts');
 
             const data = await fetch('/api/products')
                 .then((res) => res.json())
 
             if (!data) return;
 
-            context.commit('removeLoading');
+            context.commit('removeLoadingProducts');
             context.commit('updateProducts', data);
         }
     },
@@ -21,10 +21,10 @@ export default {
         updateProducts(state, products) {
             state.products = products;
         },
-        setLoading(state) {
+        setLoadingProducts(state) {
             state.productsLoading = true;
         },
-        removeLoading(state) {
+        removeLoadingProducts(state) {
             state.productsLoading = false;
         }
     },
