@@ -28,20 +28,23 @@
 import CustomCheckbox from "@/components/CustomCheckbox.vue";
 import {mapActions, mapGetters, mapMutations} from "vuex";
 import Button from "@/components/ui/Button.vue";
-import {convertProxyToObject, createUrlFormObj} from "@/components/lib/lib.js";
+import {convertProxyToObject, createUrlFormObj, parseUrlParams} from "@/components/lib/lib.js";
 
 export default{
     name: "FilterSelect",
     props: ['filter', 'keyName', 'filterId', 'filtersLoading'],
     components: {Button, CustomCheckbox},
     computed: {
-        ...mapGetters(['allActiveFilters']),
-        ...mapGetters(['allFilters']),
+        ...mapGetters({
+            allFilters: 'filter/filters',
+            allActiveFilters: 'filter/activeFilters',
+            isShowedApply: 'filter/isShowedApply'
+        }),
         isApplyActive() {
             const lastActiveFilter = this.allActiveFilters[this.allActiveFilters.length - 1];
             console.log();
             return (
-                lastActiveFilter?.name === this.keyName
+                this.isShowedApply && lastActiveFilter?.name === this.keyName
             )
         },
     },
@@ -51,15 +54,33 @@ export default{
         };
     },
     methods: {
-        ...mapMutations(['addActiveFilter']),
-        ...mapMutations(['clearActiveFilter']),
-        ...mapActions(['fetchActiveFilters']),
+        ...mapMutations({
+            addActiveFilter: 'filter/PUSH_ACTIVE_FILTER',
+            clearActiveFilter: 'filter/clearActiveFilter',
+            showApplyBlock: 'filter/SET_SHOW_APPLY_TRUE',
+            hideApplyBlock: 'filter/SET_SHOW_APPLY_FALSE'
+        }),
+        ...mapActions({
+            fetchActiveFilters: 'filter/fetchActiveFilters'
+        }),
         sendFilters() {
+            console.log(this.allActiveFilters);
+            console.log(this.allFilters);
             const resultObject = convertProxyToObject(this.allFilters);
-            this.fetchActiveFilters(createUrlFormObj(resultObject))
+            const searchParams = createUrlFormObj(resultObject);
+
+            // Add searchParams in current URL
+            const currentUrl = window.location.origin + window.location.pathname ;
+            const newUrl = currentUrl + `?${searchParams}`;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+
+            if (this.isShowedApply) this.hideApplyBlock();
+            this.fetchActiveFilters(searchParams);
         },
         changeCheckbox(selectId, checkboxId, item) {
-            if (item.model) {
+            if (!this.isShowedApply) this.showApplyBlock();
+
+            if (item.checked) {
                 this.addActiveFilter({name:this.keyName, filter: item});
             } else {
                 this.clearActiveFilter({name:this.keyName, filter: item})

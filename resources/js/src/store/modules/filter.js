@@ -1,51 +1,76 @@
 import filterInitial from "@/store/modules/filterInitial.js";
 export default {
+    namespaced: true,
     // initial value
     state: {
+        filtersReceived: false,
         filtersLoading: false,
         filters: filterInitial,
         activeFilters: [],
-        filtersRow: ''
+        isShowedApply: false,
     },
     actions: {
         async fetchFilters(context) {
-            context.commit('setLoadingFilters');
+            context.commit('SET_LOADING_TRUE');
+            const searchParams = window.location.search;
 
-            const responseData = await fetch('/api/products/filters')
+            const responseData = await fetch(`/api/products/filters${searchParams}`)
                 .then((res) => res.json())
 
             if (!responseData) return;
 
-            context.commit('removeLoadingFilters');
-            context.commit('updateFilters', responseData);
+            context.commit('SET_LOADING_FALSE');
+            context.commit('UPDATE', responseData);
+            if (searchParams) {
+                context.commit('SET_ACTIVE_FILTERS', responseData);
+            }
         },
         async fetchActiveFilters(context, searchParams) {
-            context.commit('setLoadingFilters');
-            context.commit('setLoadingProducts');
+            // context.commit('SET_LOADING_TRUE');
+            context.commit('product/SET_LOADING_TRUE', null, { root: true })
 
             const responseData = await fetch('/api/products?' + searchParams)
                 .then((res) => res.json())
 
             if (!responseData) return;
 
-            context.commit('removeLoadingFilters');
-            context.commit('removeLoadingProducts');
-            context.commit('updateProducts', responseData);
+            // context.commit('SET_LOADING_FALSE');
+            context.commit('product/SET_LOADING_FALSE', null, { root: true })
+            context.commit('product/UPDATE', responseData, { root: true });
         }
     },
     mutations: {
-        updateFilters(state, filters) {
+        UPDATE(state, filters) {
+            if (!state.filtersReceived) state.filtersReceived = true
             state.filters = filters;
         },
-        setLoadingFilters(state) {
+        SET_LOADING_TRUE(state) {
             state.filtersLoading = true;
         },
-        removeLoadingFilters(state) {
+        SET_LOADING_FALSE(state) {
             state.filtersLoading = false;
         },
-        addActiveFilter(state, data) {
+        SET_SHOW_APPLY_TRUE(state) {
+            state.isShowedApply = true;
+        },
+        SET_SHOW_APPLY_FALSE(state) {
+            state.isShowedApply = false;
+        },
+        PUSH_ACTIVE_FILTER(state, data) {
             const { name, filter } = data;
             state.activeFilters.push({name, value: filter.value})
+        },
+        SET_ACTIVE_FILTERS(state, responseData) {
+            for (const responseDataKey in responseData) {
+                if (responseData[responseDataKey].items) {
+                    responseData[responseDataKey].items.forEach((item) => {
+                        if (item.checked) {
+                            this.commit('filter/PUSH_ACTIVE_FILTER', {name: responseDataKey, filter: item})
+                        }
+                    })
+                }
+            }
+            // state.activeFilters = data;
         },
         clearActiveFilter(state, data) {
             const activeFilters = JSON.parse(JSON.stringify(state.activeFilters));
@@ -56,19 +81,22 @@ export default {
                 }
             })
         },
-        addFilterRow(state, data) {
-            state.filtersRow = data
-        }
     },
     getters: {
-        allFilters(state) {
+        filters(state) {
             return state.filters;
         },
-        allActiveFilters(state) {
+        activeFilters(state) {
             return state.activeFilters;
         },
         filtersLoading(state) {
             return state.filtersLoading
+        },
+        isExist(state) {
+            return state.filtersReceived
+        },
+        isShowedApply(state) {
+            return state.isShowedApply;
         }
     },
 }

@@ -1,28 +1,30 @@
 <template>
     <PrimaryHeader/>
-    <router-view></router-view>
+    <router-view class="temp-wrapper"></router-view>
     <div class="container d-flex justify-content-between gap-4">
-        <Catalog/>
+
     </div>
 </template>
 
 <script>
 import PrimaryHeader from "@/components/PrimaryHeader.vue";
-import Catalog from "@/components/Catalog.vue";
+import {mapActions} from "vuex";
+import {parseUrlParams} from "@/components/lib/lib.js";
 
 export default {
     components: {
-        Catalog,
         PrimaryHeader
     },
     computed: {
 
     },
     methods: {
-
+        ...mapActions({
+            checkAuth: 'auth/checkAuth'
+        })
     },
     async mounted() {
-
+        await this.checkAuth();
     }
 }
 </script>

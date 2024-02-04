@@ -26,20 +26,44 @@ class ProductController extends Controller
         return $products;
     }
 
-    public function getFilters(): array
+    public function getFilters(Request $request): array
     {
+        $categories = Category::all(['id', 'value']);
         $sizes = Size::all(['id', 'value']);
         $sorts = Sort::all(['id', 'value']);
-        $categories = Category::all(['id', 'value']);
 
-        foreach ($categories as $category) {
-            $category['model'] = false;
+        $filterCategory = explode('-', $request->query('category'));
+        $filterSize = explode('-', $request->query('size'));
+        $filterSort = explode('-', $request->query('kind'));
+
+        if ($filterCategory) {
+            foreach ($categories as &$category) {
+                if (in_array($category['value'], $filterCategory)) {
+                    $category['checked'] = true;
+                } else {
+                    $category['checked'] = false;
+                }
+            }
         }
-        foreach ($sizes as $size) {
-            $size['model'] = false;
+
+        if ($filterSize) {
+            foreach ($sizes as &$size) {
+                if (in_array($size['value'], $filterSize)) {
+                    $size['checked'] = true;
+                } else {
+                    $size['checked'] = false;
+                }
+            }
         }
-        foreach ($sorts as $sort) {
-            $sort['model'] = false;
+
+        if ($filterSort) {
+            foreach ($sorts as &$sort) {
+                if (in_array($sort['value'], $filterSort)) {
+                    $sort['checked'] = true;
+                } else {
+                    $sort['checked'] = false;
+                }
+            }
         }
 
         $filterObject = array (
@@ -63,7 +87,7 @@ class ProductController extends Controller
         return $filterObject;
     }
 
-    public function filterProducts(Request $request)
+    public function filterProducts(Request $request): Collection|array
     {
         if ($request->hasAny(['category', 'kind', 'size']))
         {

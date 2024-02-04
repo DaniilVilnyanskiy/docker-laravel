@@ -28,3 +28,11 @@
         background-position: 800px 0
     }
 }
+
+ul, ol {
+    margin: 0 !important;
+}
+
+.temp-wrapper {
+    height: calc(100vh - 75px);
+}

@@ -1,5 +1,5 @@
 <template>
-    <header class="shadow-md">
+    <header class="header shadow-md">
         <div class="container header__container mx-auto py-4 md:py-8">
             <div class="header__logo">
 <!--                <img src="{{ asset('img/content/logo.png') }}" alt="logo">-->
@@ -12,33 +12,63 @@
                     <li>
                         <router-link class="header__nav_link" to="/catalog">Каталог</router-link>
                     </li>
+                    <li v-if="!this.isUserAuth">
+                        <router-link
+                            class="header__nav_link"
+                            to="/user/login"
+                        >Авторизация</router-link>
+                    </li>
+                    <li v-if="!this.isUserAuth">
+                        <router-link
+                            class="header__nav_link"
+                            to="/user/register"
+                        >Регистрация</router-link>
+                    </li>
+                    <li v-if="this.isUserAuth">
+                        <router-link
+                            class="header__nav_link"
+                            to="/user/personal"
+                        >Кабинет</router-link>
+                    </li>
                 </ul>
             </nav>
             <div class="header__auth d-flex">
-<!--                @guest-->
-<!--                <x-ui.button text="Войти" class="btn btn__primary"/>-->
-<!--                <x-ui.button text="Зарегистрироваться" class="btn"/>-->
-<!--                @else-->
-<!--                <x-ui.button text="Кабинет"/>-->
-<!--                <x-ui.button text="Выйти"/>-->
-<!--                @endif-->
+                <button v-if="this.isUserAuth" class="header__nav_link" @click="this.logOut">Выйти</button>
             </div>
         </div>
     </header>
 </template>
 
 <script>
-// import {Button} from './Button.vue';
-//
-// export default defineComponent({
-//     components: {
-//         Button
-//     }
-// })
+import {mapActions, mapGetters} from "vuex";
+
+export default {
+    name: "PrimaryHeader",
+    components: {},
+    setup() {
+        return {};
+    },
+    data() {
+        return {
+
+        };
+    },
+    computed: {
+      ...mapGetters({
+          isUserAuth: 'auth/authenticated'
+      })
+    },
+    methods: {
+        ...mapActions({
+            logOut: 'auth/logout'
+        })
+    }
+}
 </script>
 
 <style lang="scss">
 .header {
+    height: 75px;
     &__container {
         display: flex;
         justify-content: space-between;
@@ -50,6 +80,8 @@
     &__nav {
         display: flex;
         gap: 12px;
+        list-style: none;
+
         &_link {
             border-radius: 12px;
             border: 1px solid black;

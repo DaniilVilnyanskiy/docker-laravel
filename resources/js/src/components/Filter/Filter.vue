@@ -28,14 +28,21 @@ export default {
         };
     },
     computed: {
-        ...mapGetters(['allFilters']),
-        ...mapGetters(['filtersLoading']),
+        ...mapGetters({
+            allFilters: 'filter/filters',
+            filtersLoading: 'filter/filtersLoading',
+            isFiltersExist: 'filter/isExist'
+        }),
     },
     methods: {
-        ...mapActions(['fetchFilters']),
+        ...mapActions({
+            fetchFilters: 'filter/fetchFilters'
+        }),
     },
     async mounted() {
-        this.fetchFilters();
+        if (!this.isFiltersExist) {
+            this.fetchFilters();
+        }
     }
 }
 </script>

@@ -5,12 +5,12 @@ export default {
             {
                 "id": 1,
                 "value": "loading",
-                "model": false
+                "checked": false
             },
             {
                 "id": 2,
                 "value": "loading",
-                "model": false
+                "checked": false
             }
         ]
     },
@@ -20,12 +20,12 @@ export default {
             {
                 "id": 1,
                 "value": "loading",
-                "model": false
+                "checked": false
             },
             {
                 "id": 2,
                 "value": "loading",
-                "model": false
+                "checked": false
             }
         ]
     },
@@ -35,12 +35,12 @@ export default {
             {
                 "id": 1,
                 "value": "loading",
-                "model": false
+                "checked": false
             },
             {
                 "id": 2,
                 "value": "loading",
-                "model": false
+                "checked": false
             }
         ]
     }

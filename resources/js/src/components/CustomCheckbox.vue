@@ -1,7 +1,7 @@
 <template>
     <div :class="['checkbox', filtersLoading && 'loading']">
         <input
-            :checked="params.model"
+            :checked="params.checked"
             @click="this.changeCheckbox"
             class="checkbox__input"
             :id="keyName + id"
@@ -22,8 +22,10 @@ export default {
     props: ['params', 'id', 'keyName'],
     components: {},
     computed: {
-        ...mapGetters(['allFilters']),
-        ...mapGetters(['filtersLoading']),
+        ...mapGetters({
+            allFilters: 'filter/filters',
+            filtersLoading: 'filter/filtersLoading'
+        }),
     },
     data() {
         return {
@@ -35,7 +37,7 @@ export default {
     },
     methods: {
         changeCheckbox() {
-            this.params.model = !this.params.model;
+            this.params.checked = !this.params.checked;
 
             this.$emit('changeCheckbox');
         },

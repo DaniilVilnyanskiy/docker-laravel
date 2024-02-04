@@ -1,4 +1,5 @@
 export default {
+    namespaced: true,
     // initial value
     state: {
         productsLoading: false,
@@ -6,30 +7,31 @@ export default {
     },
     actions: {
         async fetchProducts(context) {
-            context.commit('setLoadingProducts');
+            context.commit('SET_LOADING_TRUE');
+            const searchParams = window.location.search;
 
-            const data = await fetch('/api/products')
+            const data = await fetch(`/api/products${searchParams}`)
                 .then((res) => res.json())
 
             if (!data) return;
 
-            context.commit('removeLoadingProducts');
-            context.commit('updateProducts', data);
+            context.commit('SET_LOADING_FALSE');
+            context.commit('UPDATE', data);
         }
     },
     mutations: {
-        updateProducts(state, products) {
+        UPDATE(state, products) {
             state.products = products;
         },
-        setLoadingProducts(state) {
+        SET_LOADING_TRUE(state) {
             state.productsLoading = true;
         },
-        removeLoadingProducts(state) {
+        SET_LOADING_FALSE(state) {
             state.productsLoading = false;
         }
     },
     getters: {
-        allProducts(state) {
+        products(state) {
             return state.products
         },
         productsLoading(state) {
