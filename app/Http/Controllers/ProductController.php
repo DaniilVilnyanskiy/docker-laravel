@@ -36,35 +36,9 @@ class ProductController extends Controller
         $filterSize = explode('-', $request->query('size'));
         $filterSort = explode('-', $request->query('kind'));
 
-        if ($filterCategory) {
-            foreach ($categories as &$category) {
-                if (in_array($category['value'], $filterCategory)) {
-                    $category['checked'] = true;
-                } else {
-                    $category['checked'] = false;
-                }
-            }
-        }
-
-        if ($filterSize) {
-            foreach ($sizes as &$size) {
-                if (in_array($size['value'], $filterSize)) {
-                    $size['checked'] = true;
-                } else {
-                    $size['checked'] = false;
-                }
-            }
-        }
-
-        if ($filterSort) {
-            foreach ($sorts as &$sort) {
-                if (in_array($sort['value'], $filterSort)) {
-                    $sort['checked'] = true;
-                } else {
-                    $sort['checked'] = false;
-                }
-            }
-        }
+        $categories = $this->enrichWithChecked($categories, $filterCategory);
+        $sizes = $this->enrichWithChecked($sizes, $filterSize);
+        $sorts = $this->enrichWithChecked($sorts, $filterSort);
 
         $filterObject = array (
             'category' =>
@@ -124,5 +98,20 @@ class ProductController extends Controller
         } else {
             return $this->getAllProducts();
         }
+    }
+
+    public function enrichWithChecked($items, $filterValues)
+    {
+        if (!empty($items)) {
+            foreach ($items as &$item) {
+                if (in_array($item['value'], $filterValues)) {
+                    $item['checked'] = true;
+                } else {
+                    $item['checked'] = false;
+                }
+            }
+        }
+
+        return $items;
     }
 }
